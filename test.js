@@ -2,9 +2,9 @@ const assert = require('assert')
 
 const { MonkeyBusinessTester } = require('./index')
 
-testMonkeyBusinessTester_test()
+testMonkeyBusinessTester_run()
 
-function testMonkeyBusinessTester_test() {
+function testMonkeyBusinessTester_run() {
   const context = {}
   const client = {}
   const clientSpy = () => spy({ result: client, context })
@@ -27,7 +27,7 @@ function testMonkeyBusinessTester_test() {
   )
 
   const subject = new MonkeyBusinessTester(client)
-  subject.test()
+  subject.run()
 
   assert.deepEqual(context.calls.map((call) => call.spy),
     [
