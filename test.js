@@ -19,7 +19,10 @@ function testMonkeyBusinessTester_test() {
       close: clientSpy(),
       wait: clientSpy(),
       quit: clientSpy(),
-      receive: clientSpy()
+      fast: clientSpy(),
+      target: clientSpy(),
+      shoot: clientSpy(),
+      reset: clientSpy()
     }
   )
 
@@ -33,7 +36,16 @@ function testMonkeyBusinessTester_test() {
       client.wait,
       client.train,
       client.wait,
+      client.fast,
+      client.target,
+      client.wait,
+      client.shoot,
+      client.wait,
+      client.wait,
+      client.reset,
+      client.wait,
       client.quit,
+      client.wait,
       client.disconnect,
       client.wait,
       client.close

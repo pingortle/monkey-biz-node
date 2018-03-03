@@ -4,7 +4,8 @@
   "description": "Client for @jrbeck's Monkey Business server",
   "main": "index.js",
   "scripts": {
-    "test": "node test"
+    "test": "node test",
+    "full-test": "node test && node integration-test"
   },
   "author": "Kaleb Lape",
   "license": "ISC"
