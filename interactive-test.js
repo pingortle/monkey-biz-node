@@ -37,13 +37,14 @@ function runTurn(pipe, { angle, force }) {
     .receive(console.log)
     .shoot({ angle, force })
     .receive(console.log)
-    .receive(console.log)
+    .receive(console.log, { timeout: Infinity })
     .reset()
-    .receive(console.log).promise
+    .receive(console.log)
 }
 
 function quit(pipe) {
-  return pipe.quit().receive(console.log)
+  return pipe.quit()
+    .receive(console.log)
     .disconnect()
     .receive(() => process.exit())
     .close()
