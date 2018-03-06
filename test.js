@@ -22,7 +22,8 @@ function testMonkeyBusinessTester_run() {
       fast: clientSpy(),
       target: clientSpy(),
       shoot: clientSpy(),
-      reset: clientSpy()
+      reset: clientSpy(),
+      catch: clientSpy()
     }
   )
 
@@ -48,6 +49,7 @@ function testMonkeyBusinessTester_run() {
       client.wait,
       client.disconnect,
       client.wait,
+      client.catch,
       client.close
     ]
   )
