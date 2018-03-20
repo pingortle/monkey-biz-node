@@ -1,53 +1,63 @@
 const udp = require('dgram')
 const readline = require('readline')
 
+const { OpenPipe } = require('./index')
+
 const input = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   terminal: false
 });
 
-const Pipe = require('./lib/pipe')
-
 const socket = udp.createSocket('udp4')
-const pipe = new Pipe(socket)
+const pipe = new OpenPipe(socket)
 
-const game = begin(pipe)
+runGame(pipe).catch(failOnError)
+process.on('SIGINT', () => {
+  quit(pipe)
+    .then(process.exit)
+    .catch(failOnError)
+})
 
-game.then(next)
-process.on('SIGINT', () => quit(game))
+async function runGame(pipe) {
+  await begin(pipe)
+  await run(pipe)
+  await quit(pipe)
+}
 
-function next() {
-  input.question('Enter "angle, force": ', answer =>
-    runTurn(game, optionsFromInput(answer))
-      .then(next)
+async function run(pipe) {
+  while (true) {
+    await next(pipe)
+  }
+}
+
+async function next(pipe) {
+  const answer = await question()
+  await runTurn(pipe, optionsFromInput(answer))
+}
+
+async function begin(pipe) {
+  await pipe.connect()
+  await pipe.train()
+}
+
+async function runTurn(pipe, { angle, force }) {
+  await pipe.target()
+  await pipe.shoot({ angle, force })
+  await pipe.result()
+  await pipe.reset()
+}
+
+async function quit(pipe) {
+  await pipe.quit()
+  await pipe.disconnect()
+  await pipe.close()
+}
+
+async function question() {
+  return new Promise(
+    resolve => input.question('Enter "angle, force": ', resolve)
   )
-}
-
-function begin(pipe) {
-  return pipe.open()
-    .connect()
-    .receive(console.log)
-    .train()
-    .receive(console.log)
-}
-
-function runTurn(pipe, { angle, force }) {
-  return pipe.target()
-    .receive(console.log)
-    .shoot({ angle, force })
-    .receive(console.log)
-    .receive(console.log, { timeout: Infinity })
-    .reset()
-    .receive(console.log)
-}
-
-function quit(pipe) {
-  return pipe.quit()
-    .receive(console.log)
-    .disconnect()
-    .receive(() => process.exit())
-    .close()
 }
 
 function optionsFromInput(input) {
@@ -56,4 +66,9 @@ function optionsFromInput(input) {
     .map(parseFloat)
 
   return { angle, force }
+}
+
+function failOnError(error) {
+  console.log(error)
+  process.exit(1)
 }
