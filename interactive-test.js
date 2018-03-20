@@ -54,7 +54,7 @@ async function quit(pipe) {
   await pipe.close()
 }
 
-async function question() {
+function question() {
   return new Promise(
     resolve => input.question('Enter "angle, force": ', resolve)
   )
