@@ -1,8 +1,8 @@
 const udp = require('dgram')
 
-const { MonkeyBusinessTester, Pipe } = require('./index')
+const { MonkeyBusinessTester, OpenPipe } = require('./index')
 
-const tester = new MonkeyBusinessTester(new Pipe(udp.createSocket('udp4')).open())
+const tester = new MonkeyBusinessTester(new OpenPipe(udp.createSocket('udp4')))
 
 tester.run().catch(error => {
   console.error(error)
